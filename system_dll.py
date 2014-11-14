@@ -92,8 +92,9 @@ class system_dll:
             if file_ptr:
                 # query for the filename of the mapped file.
                 filename = create_string_buffer(2048)
-                psapi.GetMappedFileNameA(kernel32.GetCurrentProcess(), file_ptr, byref(filename), 2048)
-
+                filename_length = psapi.GetMappedFileNameA(kernel32.GetCurrentProcess(), file_ptr, byref(filename), 2048)
+                if filename_length == 0:
+                    return
                 # store the full path. this is kind of ghetto, but i didn't want to mess with QueryDosDevice() etc ...
                 self.path = os.sep + filename.value.split(os.sep, 3)[3]
 
